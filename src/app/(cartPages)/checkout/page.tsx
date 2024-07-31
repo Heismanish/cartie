@@ -25,7 +25,8 @@ const Checkout = () => {
         </div>
       ))}
       <h1 className="font-semibold text-xl">
-        Checkout amount : <span className="font-bold">${checkoutAmount}</span>
+        Checkout amount :{" "}
+        <span className="font-bold">${checkoutAmount.toFixed(2)}</span>
       </h1>
       <Button>
         {" "}
