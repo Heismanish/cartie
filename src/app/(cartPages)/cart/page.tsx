@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useCart } from "../../../lib/CartProvider";
 import {
   Card,
   CardContent,
@@ -11,6 +10,9 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { MinusIcon, PlusIcon, Trash } from "lucide-react";
+import { useCart } from "@/lib/CartContext";
+import Link from "next/link";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 const Cart = () => {
   const { cart, updateCart, deleteItem } = useCart();
@@ -19,7 +21,7 @@ const Cart = () => {
   useEffect(() => {
     let sum = 0;
     cart.forEach((p) => {
-      sum += parseInt(p.price) * p.quantity;
+      sum += parseFloat(p.price) * p.quantity;
     });
 
     setTotal(sum);
@@ -27,17 +29,22 @@ const Cart = () => {
 
   return (
     <>
-      <h1 className="  text-accent-foreground text-2xl font-normal my-2">
-        Welcome to your cart:
+      <h1 className="  text-accent-foreground text-2xl font-semibold my-2">
+        Welcome to your cart:{" "}
       </h1>
-      <section className="border-secondary-foreground border-t-2 border-b-2 min-h-[120px]  h-full w-full ">
+      <section className="border-secondary-foreground border-t-2 border-b-2 min-h-[120px]  h-full w-full  ">
         {cart.length == 0 && (
-          <p className="text-center h-full min-h-full font"> </p>
+          <p className="text-center min-h-full font-semibold text-xl p-4 flex flex-col items-center gap-2">
+            Nothing here 🥺{" "}
+            <Button className="w-fit p-2" asChild>
+              <Link href={"/"}>Keep shopping </Link>
+            </Button>
+          </p>
         )}
         {cart.map((product) => (
           <Card
             key={product.id}
-            className="overflow-scroll flex flex-row items-start py-2 w-full  border-none shadow-none mb-1 border border-b-2"
+            className="overflow-scroll flex flex-row items-center py-2 w-full  border-none shadow-none mb-1 border border-b-2"
           >
             <CardHeader className="sm:max-w-[100px] md:max-w-[140px]  w-full flex  justify-center ">
               <Image
@@ -101,9 +108,19 @@ const Cart = () => {
         ))}
       </section>
 
-      <section className="text-right text-lg font-medium my-4">
-        Total: <span className="ml-2">${total}</span>
-      </section>
+      <footer className="flex justify-between text-lg font-medium my-4 items-center">
+        <Button>
+          <Link
+            href="/checkout"
+            className="flex items-center gap-2 font-medium text-lg"
+          >
+            Checkout <ArrowRightIcon></ArrowRightIcon>
+          </Link>
+        </Button>
+        <p>
+          Total: <span className="ml-2 text-right">${total.toFixed(2)}</span>
+        </p>
+      </footer>
     </>
   );
 };

@@ -7,6 +7,7 @@ const Navbar = () => {
       <h1 className="text-4xl font-bold text-primary">
         <Link href="/"> Stynx</Link>
       </h1>
+
       <GoToCartBtn />
     </div>
   );

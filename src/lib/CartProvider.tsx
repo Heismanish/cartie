@@ -1,43 +1,11 @@
 "use client";
-import { ProductType } from "@/app/Types/types";
+import { cartProducts } from "@/app/Types/types";
 import { ReactNode, useState } from "react";
-import { createContext, useContext } from "react";
-
-// CONTEXT
-type cartProducts = {
-  id: number;
-  title: string;
-  image: string;
-  quantity: number;
-  price: string;
-};
-
-type cartContextType = {
-  cart: cartProducts[];
-  updateCart: (
-    id: number,
-    title: string,
-    image: string,
-    quantity: number,
-    price: string
-  ) => void;
-  deleteItem: (id: number) => void;
-};
-
-const cartContextDefaultValues: cartContextType = {
-  cart: [],
-  updateCart: () => {},
-  deleteItem: (id: number) => {},
-};
-
-const CartContext = createContext<cartContextType>(cartContextDefaultValues);
-
-export function useCart() {
-  return useContext(CartContext);
-}
+import { CartContext } from "./CartContext";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<cartProducts[]>([]);
+  const [checkoutAmount, setCheckAmount] = useState<number>(0);
 
   const updateCart = (
     id: number,
@@ -46,11 +14,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     quantity: number,
     price: string
   ) => {
-    // console.log(id, title, quantity, price);
     const index = cart.findIndex((product: cartProducts) => product.id === id);
 
     if (index !== -1) {
       const newCart = cart.map((product, i) => {
+        setCheckAmount((a) => a + parseFloat(product.price));
         return i === index
           ? { ...product, quantity: product.quantity + quantity }
           : product;
@@ -67,6 +35,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         quantity: 1,
         price: price,
       };
+      setCheckAmount((a) => a + parseFloat(productToAdd.price));
 
       setCart((cart) => [...cart, productToAdd]);
     }
@@ -81,6 +50,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     cart,
     updateCart,
     deleteItem,
+    checkoutAmount,
   };
 
   return (

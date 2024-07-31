@@ -12,17 +12,17 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { ProductType } from "@/app/Types/types";
-import { useCart } from "@/lib/CartProvider";
+import { useCart } from "@/lib/CartContext";
 
 const ProductsList = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
-  const { cart, updateCart } = useCart();
 
+  const { updateCart } = useCart();
+
+  // Fetch products from the API
   const getProducts = async () => {
     const response = await fetch("https://fakestoreapi.com/products");
-
     const products = await response.json();
-    console.log(products);
     setProducts(products);
   };
 
